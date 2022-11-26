@@ -14,24 +14,22 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>Get in touch</h1>")
 }
 
-func pathHandler(w http.ResponseWriter, r *http.Request) {
+type Router struct{}
+
+func (router Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
 	case "/":
 		homeHandler(w, r)
 	case "/contact":
 		contactHandler(w, r)
 	default:
-		//w.WriteHeader(http.StatusNotFound)
-		//http.NotFound(w, r)
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
-
 }
 
 func main() {
-	http.HandleFunc("/", pathHandler)
-	//http.HandleFunc("/contact", contactHandler) --> instead of using a func for each page we can use a router -- pathHandler
+	router := Router{}
 	fmt.Println("Starting server on port 3333")
-	http.ListenAndServe(":3333", nil)
+	http.ListenAndServe(":3333", router)
 }
