@@ -21,7 +21,9 @@ func pathHandler(w http.ResponseWriter, r *http.Request) {
 	case "/contact":
 		contactHandler(w, r)
 	default:
-		http.NotFound(w, r)
+		//w.WriteHeader(http.StatusNotFound)
+		//http.NotFound(w, r)
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
 
@@ -29,7 +31,7 @@ func pathHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", pathHandler)
-	//http.HandleFunc("/contact", contactHandler)
+	//http.HandleFunc("/contact", contactHandler) --> instead of using a func for each page we can use a router -- pathHandler
 	fmt.Println("Starting server on port 3333")
 	http.ListenAndServe(":3333", nil)
 }
